@@ -13,7 +13,6 @@ public class AddressBookService {
 		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
 	};
 
-	public static String FILE_NAME = "AddressBook.txt";
 	private List<Contact> contactList = new ArrayList<>();
 	private AddressbookDBService addressBookDB;
 
@@ -21,30 +20,6 @@ public class AddressBookService {
 		addressBookDB = AddressbookDBService.getInstance();
 	}
 
-	public void writeData(Map<String, AddressBook> stateAddressBookMap) {
-		StringBuffer personBuffer = new StringBuffer();
-		stateAddressBookMap.values().stream().map(book -> book.getPersonList()).forEach(list -> {
-			list.forEach(person -> {
-				String empString = person.toString().concat("\n");
-				personBuffer.append(empString);
-			});
-		});
-		try {
-			Files.write(Paths.get(FILE_NAME), personBuffer.toString().getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void readData() {
-		try {
-			Files.lines(new File(FILE_NAME).toPath()).forEach(System.out::println);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	
 	/**
 	 * reads all data from database
 	 * 
@@ -57,6 +32,28 @@ public class AddressBookService {
 			this.contactList = addressBookDB.readData();
 		}
 		return this.contactList;
+	}
+	
+	public void updatePersonsPhone(String name, long phone) throws DatabaseException {
+		int result = addressBookDB.updatePersonsData(name, phone);
+		if (result == 0)
+			return;
+		this.contactList = addressBookDB.readData();
+		Contact contact = this.getContact(name);
+		if (contact != null)
+			contact.setPhoneNumber(phone);
+	}
+
+	private Contact getContact(String name) {
+		Contact contact = this.contactList.stream().filter(contactData -> contactData.getName().equals(name)).findFirst()
+				.orElse(null);
+		return contact;
+	}
+
+	public boolean checkContactDataSync(String name) throws DatabaseException {
+		List<Contact> contactList = addressBookDB.getContactFromDatabase(name);
+		return contactList.get(0).equals(getContact(name));
+
 	}
 
 }
