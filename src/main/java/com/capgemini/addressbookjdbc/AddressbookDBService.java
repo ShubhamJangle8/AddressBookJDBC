@@ -1,13 +1,16 @@
 package com.capgemini.addressbookjdbc;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AddressbookDBService {
 	private static AddressbookDBService addressBookDB;
@@ -102,6 +105,30 @@ public class AddressbookDBService {
 		return contactList;
 	}
 	
+	/**
+	 * UC 18
+	 * returns list of contacts added between given dates
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<Contact> readDataForGivenDateRange(LocalDate start, LocalDate end) throws DatabaseException {
+		String sql = String.format("select contacts.contact_id, address_book.addressbookName, addressbookType.type, contacts.fName, contacts.lName, contacts.address, zipCityState.city, zipCityState.state, contacts.zip, contacts.phone, contacts.email "
+				+ "from contacts inner join zipCityState on contacts.zip = zipCityState.zip "
+				+ "inner join address_book on contacts.contact_id = address_book.contact_id "
+				+ "inner join addressbookType on addressbookType.addressbookName = address_book.addressbookName "
+				+ "where dateAdded between '%s' and '%s'", Date.valueOf(start), Date.valueOf(end));
+		return this.getContactData(sql);
+	}
+	
+	/**
+	 * Updating contact details
+	 * @param name
+	 * @param phone
+	 * @return
+	 * @throws DatabaseException
+	 */
 	@SuppressWarnings("static-access")
 	public int updatePersonsData(String name, long phone) throws DatabaseException {
 		String sql = "update contacts set phone = ? where fName = ?";

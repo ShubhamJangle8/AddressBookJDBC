@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,19 @@ public class AddressBookService {
 		Contact contact = this.contactList.stream().filter(contactData -> contactData.getName().equals(name)).findFirst()
 				.orElse(null);
 		return contact;
+	}
+	
+	/**
+	 * UC 18
+	 * returns list of contacts added between given dates
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<Contact> getContactsByDate(LocalDate start, LocalDate end) throws DatabaseException {
+		List<Contact> contactByDateList = addressBookDB.readDataForGivenDateRange(start, end);
+		return contactByDateList;
 	}
 
 	public boolean checkContactDataSync(String name) throws DatabaseException {
