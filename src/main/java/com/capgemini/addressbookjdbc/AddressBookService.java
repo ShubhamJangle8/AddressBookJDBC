@@ -101,7 +101,6 @@ public class AddressBookService {
 		addbookName, LocalDate.now());
 	}
 
-
 	public boolean checkContactDataSync(String name) throws DatabaseException {
 		List<Contact> contactList = addressBookDB.getContactFromDatabase(name);
 		return contactList.get(0).equals(getContact(name));

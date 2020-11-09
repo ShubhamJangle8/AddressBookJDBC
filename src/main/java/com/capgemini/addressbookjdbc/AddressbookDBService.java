@@ -184,7 +184,6 @@ public class AddressbookDBService {
 	
 	/**
 	 * Adding contact to the address book database and returning added records
-	 * 
 	 * @param firstName
 	 * @param lastName
 	 * @param address
@@ -213,7 +212,7 @@ public class AddressbookDBService {
 			throw new DatabaseException(exception.getMessage());
 		}
 
-		try (Statement statement = (Statement) connection.createStatement()) { // adding to contacts_table
+		try (Statement statement = connection.createStatement()) { 
 			String sql = String.format(
 					"insert into contacts (fName, lName, address, zip, phone, email, dateAdded) values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 					firstName, lastName, address, zip, phone, email, Date.valueOf(dateAdded));
@@ -232,14 +231,14 @@ public class AddressbookDBService {
 			throw new DatabaseException("Unable to add to contacts");
 		}
 
-		try (Statement statement = (Statement) connection.createStatement()) { // adding to zipCityState
+		try (Statement statement = connection.createStatement()) {
 			String sqlGetZip = String.format("select zip from zipCityState where zip = %s", zip);
 			ResultSet resultSet = statement.executeQuery(sqlGetZip);
 			int existingZip = 0;
 			while (resultSet.next()) {
 				existingZip = resultSet.getInt("zip");
 			}
-			if (existingZip == 0) { // if zip is not present in zipCityState then add or skip
+			if (existingZip == 0) {
 				String sql = String.format("insert into zipCityState (zip, city, state) values ('%s', '%s', '%s')", zip,
 						city, state);
 				statement.executeUpdate(sql);
@@ -255,7 +254,7 @@ public class AddressbookDBService {
 		}
 
 		Map<String, String> addbookNameTypeMap = new HashMap<>();
-		try (Statement tempStatement = (Statement) connection.createStatement()) { // getting addressbook types
+		try (Statement tempStatement = connection.createStatement()) {
 			String sqlGetType = String.format("select * from addressbooktype");
 			ResultSet resultSet = tempStatement.executeQuery(sqlGetType);
 			while (resultSet.next()) {
@@ -265,7 +264,7 @@ public class AddressbookDBService {
 			throw new DatabaseException(e.getMessage());
 		}
 		final int contId = contactId;
-		try (Statement statement = (Statement) connection.createStatement()) { // adding to addressbook_table
+		try (Statement statement = connection.createStatement()) {
 			addbookName.forEach(name -> {
 				String sql = String.format(
 						"insert into address_book (contact_id, addressbookName) values ('%s', '%s')", contId, name);
