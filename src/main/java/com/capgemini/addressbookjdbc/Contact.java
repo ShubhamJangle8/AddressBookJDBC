@@ -1,5 +1,7 @@
 package com.capgemini.addressbookjdbc;
 
+import java.time.LocalDate;
+
 public class Contact {
 	private int contactId;
 	private String firstName;
@@ -7,6 +9,7 @@ public class Contact {
 	private String address;
 	private String city;
 	private String state;
+	private LocalDate dateAdded;
 
 	public int getContactId() {
 		return contactId;
@@ -60,6 +63,12 @@ public class Contact {
 		this.contactId = contactId;
 		this.addbookName = addbookName;
 		this.type = type;
+	}
+	
+	public Contact(int contactId, String firstName, String lastName, String address, String city, String state, int zip,
+				   long phoneNum, String email, String addbookName, String type, LocalDate dateAdded) {
+		this(contactId, firstName, lastName, address, city, state, zip, phoneNum, email, addbookName, type);
+		this.dateAdded = dateAdded;
 	}
 
 	public String getName() {

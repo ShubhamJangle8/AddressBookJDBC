@@ -1,9 +1,11 @@
 package com.capgemini.addressbookjdbc;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -54,7 +56,7 @@ public class AddressBookServiceTest {
 	}
 	
 	/**
-	 * UC 19
+	 * UC 19 
 	 * @throws DatabaseException
 	 */
 	@Test
@@ -71,5 +73,20 @@ public class AddressBookServiceTest {
 		AddressBookService addressBookService = new AddressBookService();
 		List<Contact> contactByState = addressBookService.getContactsByState("Maharashtra");
 		assertEquals(7, contactByState.size());
+	}
+	
+	/**
+	 * UC20
+	 * @throws DatabaseException
+	 * @throws SQLException
+	 */
+	@Test
+	public void givenNewContact_WhenAdded_ShouldSincWithDB() throws DatabaseException, SQLException {
+		AddressBookService addressBookService = new AddressBookService();
+		addressBookService.addNewContact("Shiv", "T", "Nashik", "Nashik", "Nashik", 111111, 666666666,
+				"shiv@gmail.com", Arrays.asList("AddressBook1", "AddressBook3"));
+		addressBookService.readContactData(IOService.DB_IO);
+		boolean result = addressBookService.checkContactDataSync("Shiv T");
+		assertTrue(result);
 	}
 }

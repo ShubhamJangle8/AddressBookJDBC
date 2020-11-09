@@ -1,13 +1,9 @@
 package com.capgemini.addressbookjdbc;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class AddressBookService {
 	public enum IOService {
@@ -84,6 +80,27 @@ public class AddressBookService {
 	public List<Contact> getContactsByState(String state) throws DatabaseException {
 		return addressBookDB.getContactsByState(state);
 	}
+	
+	/**
+	 * Adding new contact to database
+	 * @param firstName
+	 * @param lastName
+	 * @param address
+	 * @param city
+	 * @param state
+	 * @param zip
+	 * @param phone
+	 * @param email
+	 * @param addbookName
+	 * @throws DatabaseException
+	 * @throws SQLException
+	 */
+	public void addNewContact(String firstName, String lastName, String address, String city, String state, int zip,
+							  long phone, String email, List<String> addbookName) throws DatabaseException, SQLException {
+		addressBookDB.addContactToDatabase(firstName, lastName, address, city, state, zip, phone, email,
+		addbookName, LocalDate.now());
+	}
+
 
 	public boolean checkContactDataSync(String name) throws DatabaseException {
 		List<Contact> contactList = addressBookDB.getContactFromDatabase(name);
