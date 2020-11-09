@@ -63,6 +63,27 @@ public class AddressBookService {
 		List<Contact> contactByDateList = addressBookDB.readDataForGivenDateRange(start, end);
 		return contactByDateList;
 	}
+	
+	/**
+	 * UC 19
+	 * returns list of contacts belonging to given city
+	 * @param city
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<Contact> getContactsByCity(String city) throws DatabaseException {
+		return addressBookDB.getContactsByCity(city);
+	}
+
+	/**
+	 * returns list of contacts belonging to given state
+	 * @param state
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<Contact> getContactsByState(String state) throws DatabaseException {
+		return addressBookDB.getContactsByState(state);
+	}
 
 	public boolean checkContactDataSync(String name) throws DatabaseException {
 		List<Contact> contactList = addressBookDB.getContactFromDatabase(name);

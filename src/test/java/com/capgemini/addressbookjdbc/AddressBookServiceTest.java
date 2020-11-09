@@ -52,4 +52,24 @@ public class AddressBookServiceTest {
 		contactByDateList = addressBookService.getContactsByDate(start, end);
 		assertEquals(2, contactByDateList.size());
 	}
+	
+	/**
+	 * UC 19
+	 * @throws DatabaseException
+	 */
+	@Test
+	public void givenContactDataInDB_WhenRetrievedByCity_ShouldMatchContactInCityCount()
+			throws DatabaseException {
+		AddressBookService addressBookService = new AddressBookService();
+		List<Contact> contactByCity = addressBookService.getContactsByCity("Mumbai");
+		assertEquals(3, contactByCity.size());
+	}
+	
+	@Test
+	public void givenContactDataInDB_WhenRetrievedByState_ShouldMatchContactInStateCount()
+			throws DatabaseException {
+		AddressBookService addressBookService = new AddressBookService();
+		List<Contact> contactByState = addressBookService.getContactsByState("Maharashtra");
+		assertEquals(7, contactByState.size());
+	}
 }
