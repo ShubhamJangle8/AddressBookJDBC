@@ -80,15 +80,15 @@ public class AddressBookServiceTest {
 	 * @throws DatabaseException
 	 * @throws SQLException
 	 */
-//	@Test
-//	public void givenNewContact_WhenAdded_ShouldSincWithDB() throws DatabaseException, SQLException {
-//		AddressBookService addressBookService = new AddressBookService();
-//		addressBookService.addNewContact("Shiv", "T", "Nashik", "Nashik", "Nashik", 111111, 666666666,
-//				"shiv@gmail.com", Arrays.asList("AddressBook1", "AddressBook3"));
-//		addressBookService.readContactData(IOService.DB_IO);
-//		boolean result = addressBookService.checkContactDataSync("Shiv T");
-//		assertTrue(result);
-//	}
+	@Test
+	public void givenNewContact_WhenAdded_ShouldSincWithDB() throws DatabaseException, SQLException {
+		AddressBookService addressBookService = new AddressBookService();
+		addressBookService.addNewContact("Shiv", "T", "Nashik", "Nashik", "Nashik", 111111, 666666666,
+				"shiv@gmail.com", Arrays.asList("AddressBook1", "AddressBook3"));
+		addressBookService.readContactData(IOService.DB_IO);
+		boolean result = addressBookService.checkContactDataSync("Shiv T");
+		assertTrue(result);
+	}
 	
 	/**
 	 * UC21
