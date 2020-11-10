@@ -1,6 +1,7 @@
 package com.capgemini.addressbookjdbc;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Contact {
 	private int contactId;
@@ -159,6 +160,11 @@ public class Contact {
 		}
 
 		return result;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(contactId, firstName, lastName, phoneNum);
 	}
 
 }

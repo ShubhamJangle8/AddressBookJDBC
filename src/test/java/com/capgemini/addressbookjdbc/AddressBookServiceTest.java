@@ -80,13 +80,35 @@ public class AddressBookServiceTest {
 	 * @throws DatabaseException
 	 * @throws SQLException
 	 */
+//	@Test
+//	public void givenNewContact_WhenAdded_ShouldSincWithDB() throws DatabaseException, SQLException {
+//		AddressBookService addressBookService = new AddressBookService();
+//		addressBookService.addNewContact("Shiv", "T", "Nashik", "Nashik", "Nashik", 111111, 666666666,
+//				"shiv@gmail.com", Arrays.asList("AddressBook1", "AddressBook3"));
+//		addressBookService.readContactData(IOService.DB_IO);
+//		boolean result = addressBookService.checkContactDataSync("Shiv T");
+//		assertTrue(result);
+//	}
+	
+	/**
+	 * UC21
+	 * @throws DatabaseException
+	 * @throws SQLException
+	 */
 	@Test
-	public void givenNewContact_WhenAdded_ShouldSincWithDB() throws DatabaseException, SQLException {
+	public void givenMultipleNewContact_WhenAddedUsingThreads_ShouldSincWithDB() throws DatabaseException {
 		AddressBookService addressBookService = new AddressBookService();
-		addressBookService.addNewContact("Shiv", "T", "Nashik", "Nashik", "Nashik", 111111, 666666666,
-				"shiv@gmail.com", Arrays.asList("AddressBook1", "AddressBook3"));
+		List<Contact> newContactsList = Arrays.asList(
+				new Contact(0, "Jeff", "Bezos", "Shirdi", "Nashik", "Nashik", 758458, 7777777777L, "jeffbezz@gmail.com",
+						"", "profession"),
+				new Contact(0, "Bill", "Gates", "Shirdi", "Nashik", "Nashik", 758458, 9865986532L, "billgates@gmail.com",
+						"", "family"),
+				new Contact(0, "Mark", "Zuks", "Shirdi", "Nashik", "Nashik", 758458, 1111111111L, "markzuk@gmail.com",
+						"", "friend"));
+		addressBookService.addMultipleContacts(newContactsList);
 		addressBookService.readContactData(IOService.DB_IO);
-		boolean result = addressBookService.checkContactDataSync("Shiv T");
+		boolean result = addressBookService
+				.checkMultipleContactDataSync(Arrays.asList("Jeff Bezos", "Bill Gates", "Mark Zuks"));
 		assertTrue(result);
 	}
 }

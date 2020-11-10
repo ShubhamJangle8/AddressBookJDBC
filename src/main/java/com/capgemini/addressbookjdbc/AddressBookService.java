@@ -3,9 +3,17 @@ package com.capgemini.addressbookjdbc;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AddressBookService {
+	private static final Logger LOG = LogManager.getLogger(AddressBookService.class);
+	
 	public enum IOService {
 		CONSOLE_IO, FILE_IO, DB_IO, REST_IO
 	};
@@ -100,11 +108,63 @@ public class AddressBookService {
 		addressBookDB.addContactToDatabase(firstName, lastName, address, city, state, zip, phone, email,
 		addbookName, LocalDate.now());
 	}
+	
+	/**
+	 * adding multiple new contacts in database using threads
+	 * @param newContactsList
+	 * @throws DatabaseException
+	 */
+	public void addMultipleContacts(List<Contact> newContactsList) throws DatabaseException {
+		Map<Integer, Boolean> contactAdditionStatus = new HashMap<Integer, Boolean>();
+		newContactsList.forEach(person -> {
+			Runnable task = () -> {
+				contactAdditionStatus.put(person.hashCode(), false);
+				LOG.info("Contact Being Added: " + Thread.currentThread().getName());
+				try {
+					addNewContact(person.getFirstName(), person.getLastName(), person.getAddress(), person.getCity(),
+							person.getState(), person.getZip(), person.getPhoneNumber(), person.getEmail(),
+							Arrays.asList(person.getType()));
+				} catch (DatabaseException | SQLException exception) {
+					exception.printStackTrace();
+				}
+				contactAdditionStatus.put(person.hashCode(), true);
+				LOG.info("Contact Added: " + Thread.currentThread().getName());
+			};
+			Thread thread = new Thread(task, person.getName());
+			thread.start();
+		});
+		while (contactAdditionStatus.containsValue(false)) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException exception) {
+				throw new DatabaseException(exception.getMessage());
+			}
+		}
+	}
 
 	public boolean checkContactDataSync(String name) throws DatabaseException {
 		List<Contact> contactList = addressBookDB.getContactFromDatabase(name);
 		return contactList.get(0).equals(getContact(name));
-
+	}
+	
+	/**
+	 * checking if data added is in sync for multiple contacts
+	 * @param namesList
+	 * @return
+	 */
+	public boolean checkMultipleContactDataSync(List<String> namesList) {
+		List<Boolean> resultList = new ArrayList<>();
+		namesList.forEach(name -> {
+			try {
+				resultList.add(checkContactDataSync(name));
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+			}
+		});
+		if (resultList.contains(false)) {
+			return false;
+		}
+		return true;
 	}
 
 }
