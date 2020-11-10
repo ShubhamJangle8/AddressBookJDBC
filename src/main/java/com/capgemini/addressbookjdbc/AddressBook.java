@@ -4,91 +4,94 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class AddressBook {
-	private String AddressBookName;
-	public List<Contact> personList;
-
-	public List<Contact> getPersonList() {
-		return personList;
+public class AddressBook{
+	Scanner sc = new Scanner(System.in);
+	public List<Contact> contactArray = new ArrayList<Contact>();	
+	public String city;
+	
+	public AddressBook(String city) {
+		this.city = city;
 	}
-
-	public AddressBook(String AddressBookName) {
-		personList = new ArrayList<Contact>();
-		this.AddressBookName = AddressBookName;
+	public List<Contact> getBook(){
+		return contactArray;
 	}
-
-	public String getAddressBookName() {
-		return AddressBookName;
+	public void addContact(Contact c) {
+		for(int i = 0; i<contactArray.size(); i++) {	
+			if(contactArray.get(i).equals(c)) {
+				System.out.println("The person already exists!!!");
+				return;
+			}
+		}
+		contactArray.add(c);
 	}
-
-	public void setAddressBookName(String addressBookName) {
-		AddressBookName = addressBookName;
-	}
-
-	public void setPersonList(List<Contact> personList) {
-		this.personList = personList;
-	}
-
-	public AddressBook() {
-		personList = new ArrayList<Contact>();
-	}
-
-	public void editPersonDetails(Scanner scanner) {
-		String FirstName;
-		String LastName;
-		String address;
-		String city;
-		String state;
-		int zip;
-		long phoneNum;
-		String email;
-
-		System.out.println("Enter name of a person to edit contact details");
-		System.out.println("First Name : ");
-		FirstName = scanner.nextLine();
-		System.out.println("Last Name : ");
-		LastName = scanner.nextLine();
-
-		for (Contact thatPerson : personList) {
-			if (FirstName.equalsIgnoreCase(thatPerson.getFirstName())
-					&& LastName.equalsIgnoreCase(thatPerson.getLastName())) {
-				System.out.println("New Address : ");
-				address = scanner.nextLine();
-				thatPerson.setAddress(address);
-				System.out.println("New City : ");
-				city = scanner.nextLine();
-				thatPerson.setCity(city);
-				System.out.println("New State : ");
-				state = scanner.nextLine();
-				thatPerson.setState(state);
-				System.out.println("New ZIP : ");
-				zip = scanner.nextInt();
-				thatPerson.setZip(zip);
-				System.out.println("New Phone number : ");
-				phoneNum = scanner.nextLong();
-				thatPerson.setPhoneNumber(phoneNum);
-				scanner.nextLine();
-				System.out.println("New Email ID : ");
-				email = scanner.nextLine();
-				thatPerson.setEmail(email);
+	
+	public void editContact(String name){
+		Scanner scanner = new Scanner(System.in);
+		String check;
+		for (int i = 0; i < contactArray.size(); i++) {
+			Contact contact = contactArray.get(i);
+			String editName = contactArray.get(i).getFirstName() + contactArray.get(i).getLastName();
+			if (name.equalsIgnoreCase(editName)) {
+				Scanner sc = new Scanner(System.in);
+				do {
+					System.out.println("Enter what you want to change : ");
+					int choice = sc.nextInt();
+					switch (choice) {
+					case 1:
+						System.out.println("Enter your new address : ");
+						String newAddress = sc.next();
+						sc.nextLine();
+						contact.setAddress(newAddress);
+						break;
+					case 2:
+						System.out.println("Enter your new city name : ");
+						String newCity = sc.next();
+						sc.nextLine();
+						contact.setCity(newCity);
+						break;
+					case 3:
+						System.out.println("Enter your new state name : ");
+						String newState = sc.next();
+						sc.nextLine();
+						contact.setState(newState);
+						break;
+					case 4:
+						System.out.println("Enter your new zip : ");
+						int newZip = sc.nextInt();
+						contact.setZip(newZip);
+						break;
+					case 5:
+						System.out.println("Enter your new phone number : ");
+						long newPNo = sc.nextLong();
+						contact.setPhoneNumber(newPNo);
+						break;
+					case 6:
+						System.out.println("Enter your new Email : ");
+						String newEmail = sc.next();
+						contact.setEmail(newEmail);
+						break;
+					default:
+						break;
+					}
+					System.out.println("Do you want to edit more ? ");
+					check = scanner.next();
+				} while (check.equalsIgnoreCase("Yes"));
 			}
 		}
 	}
-
-	public void deletePersonDetails(Scanner scanner) {
-		String FirstName;
-		String LastName;
-
-		System.out.println("Enter name of a person to DELETE contact details");
-		System.out.println("First Name : ");
-		FirstName = scanner.nextLine();
-		System.out.println("Last Name : ");
-		LastName = scanner.nextLine();
-		for (Contact thatPerson : personList) {
-			if (FirstName.equalsIgnoreCase(thatPerson.getFirstName())
-					&& LastName.equalsIgnoreCase(thatPerson.getLastName())) {
-				personList.remove(thatPerson);
+	public void deleteContact(String name){
+		for (int i = 0; i < contactArray.size(); i++) {
+			String delName = contactArray.get(i).getFirstName() + contactArray.get(i).getLastName();
+			if (name.equals(delName)) {
+				contactArray.remove(contactArray.get(i));
 			}
+		}
+	}
+	
+	public void viewList() {
+		
+		for(Contact c : contactArray) {
+			System.out.println(c + "\n");
 		}
 	}
 
