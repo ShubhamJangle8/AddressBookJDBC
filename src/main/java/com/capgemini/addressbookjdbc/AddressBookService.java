@@ -168,17 +168,20 @@ public class AddressBookService {
 		return this.contactList;
 	}
 	
-	public void updatePersonsPhone(String name, long phone) throws DatabaseException {
-		int result = addressBookDB.updatePersonsData(name, phone);
-		if (result == 0)
-			return;
-		this.contactList = addressBookDB.readData();
-		Contact contact = this.getContact(name);
-		if (contact != null)
-			contact.setPhoneNumber(phone);
+	public void updatePersonsPhone(String name, long phone, IOService ioService) throws DatabaseException {
+		if (ioService.equals(IOService.DB_IO)) {
+			int result = addressBookDB.updatePersonsData(name, phone);
+			if (result == 0)
+				return;
+		}
+		if (ioService.equals(IOService.REST_IO)) {
+			Contact contact = this.getContact(name);
+			if (contact != null)
+				contact.setPhoneNumber(phone);
+		}
 	}
 
-	private Contact getContact(String name) {
+	public Contact getContact(String name) {
 		Contact contact = this.contactList.stream().filter(contactData -> contactData.getName().equals(name)).findFirst()
 				.orElse(null);
 		return contact;

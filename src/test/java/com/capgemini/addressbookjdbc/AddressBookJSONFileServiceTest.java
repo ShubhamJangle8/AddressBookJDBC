@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.capgemini.addressbookjdbc.AddressBookService.IOService;
 import com.google.gson.Gson;
 
 import io.restassured.RestAssured;
@@ -85,6 +86,26 @@ class AddressBookJSONFileServiceTest {
 		long entries = addressBookFileService.countEntries();
 		assertEquals(18, entries);
 	}
+	
+	private Response updatePhone(String name, long phone) throws DatabaseException {
+		Contact[] arrayOfContact = getContactList();
+		AddressBookService addressbookService = new AddressBookService(Arrays.asList(arrayOfContact));
+		addressbookService.updatePersonsPhone(name, phone, IOService.REST_IO);
+		Contact contactToUpdate = addressbookService.getContact(name);
+		String contactJson = new Gson().toJson(contactToUpdate);
+		RequestSpecification request = RestAssured.given();
+		request.header("Content-Type", "application/json");
+		request.body(contactJson);
+		return request.put("/contacts/" + contactToUpdate.getContactId());
 
+	}
+	
+	@Test
+	public void givenMultipleEmployees_WhenUpdatedSalary_ShouldSyncWithDB() throws DatabaseException {
+		Contact[] arrayOfContact = getContactList();
+		AddressBookService addressBookService = new AddressBookService(Arrays.asList(arrayOfContact));
+		int statusCode = updatePhone("Joe Bidden", 8888855555L).getStatusCode();
+		assertEquals(200, statusCode);
+	}
 
 }
