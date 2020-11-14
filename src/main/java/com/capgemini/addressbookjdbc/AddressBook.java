@@ -94,5 +94,9 @@ public class AddressBook{
 			System.out.println(c + "\n");
 		}
 	}
+	
+	public List<Contact> getContactList() {
+		return contactArray;
+	}
 
 }

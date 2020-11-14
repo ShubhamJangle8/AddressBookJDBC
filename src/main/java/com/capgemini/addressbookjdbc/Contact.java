@@ -66,12 +66,18 @@ public class Contact {
 		this.type = type;
 	}
 	
+	public Contact(String firstName, String lastName, String address, String city, String state, int zip, long phoneNum,
+			String email, LocalDate dateAdded) {
+		this(firstName, lastName, address, city, state, zip, phoneNum, email);
+		this.dateAdded = dateAdded;
+	}
+	
 	public Contact(int contactId, String firstName, String lastName, String address, String city, String state, int zip,
 				   long phoneNum, String email, String addbookName, String type, LocalDate dateAdded) {
 		this(contactId, firstName, lastName, address, city, state, zip, phoneNum, email, addbookName, type);
 		this.dateAdded = dateAdded;
 	}
-
+	
 	public String getName() {
 		return firstName + " " + lastName;
 	}

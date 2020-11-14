@@ -120,15 +120,16 @@ public class AddressBookService {
 		try {
 			Gson gson = new Gson();
 			FileWriter writer = new FileWriter(GSON_FILE_NAME);
-			stateAddressBookMap.values().stream().map(entry -> entry.getPersonList())
-					.forEach(listEntry -> listEntry.forEach(person -> {
-						String json = gson.toJson(person);
-						try {
-							writer.write(json);
-						} catch (IOException exception) {
-							exception.printStackTrace();
-						}
-					}));
+			for (Map.Entry<String, AddressBook> entry : stateAddressBookMap.entrySet()) {
+				entry.getValue().getContactList().forEach(contact -> {
+					String json = gson.toJson(contact);
+					try {
+						writer.write(json);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				});
+			}
 			writer.close();
 			System.out.println("Data entered successfully to addressbook.json file.");
 		} catch (IOException exception) {
@@ -297,6 +298,14 @@ public class AddressBookService {
 	
 	public int countEntries() {
 		return contactList.size();
+	}
+	
+	/**
+	 * adds new contacts to application memory
+	 * @param newContacts
+	 */
+	public void addToApplicationMemory(Contact contact) {
+		contactList.add(contact);
 	}
 
 }
